@@ -3,7 +3,7 @@ import Square from './Square';
 import Status from './Status';
 
 //players type
-type Player = "X" | "O" | "draw" | null;
+type Player = "X" | "O" | null;
 
 
 const Board: React.FC = () => {
@@ -11,8 +11,8 @@ const Board: React.FC = () => {
 
   const [board, setBoard] = useState<Player[]>(Array(9).fill(null));
   const [currentPlayer, setCurrentPlayer] = useState<"X" | "O">("X");
-  const [winner, setWinner] = useState<Player | null>(null);
-  // const [isSinglePlayer, setIsSinglePlayer] = useState<Boolean>(false);
+  const [winner, setWinner] = useState<Player | "draw">(null);
+
 
   //select move bot
   useEffect(() => {
@@ -21,7 +21,7 @@ const Board: React.FC = () => {
       if (movBot !== -1) {
         setTimeout(() => {
           const newBoard = [...board]
-          newBoard[movBot]="O";
+          newBoard[movBot] = "O";
           setBoard(newBoard);
           setCurrentPlayer("X");
         }, 500);
@@ -31,7 +31,6 @@ const Board: React.FC = () => {
 
   //handleClick for click on squares
   const handleClick = (index: number) => {
-
     if (board[index] || winner || currentPlayer === "O") return;
     const newBoard = [...board];
     newBoard[index] = "X";
@@ -82,7 +81,7 @@ const Board: React.FC = () => {
     <div className='flex flex-col items-center justify-center min-h-screen'>
       <p className='text-2xl mb-2 w-96 bg-blue-950 text-white text-center'>Tic Tac Toe</p>
       <div className='flex flex-row justify-around m-3'>
-       
+
         <button onClick={resetGame} className='m-2 p-2 bg-red-700 text-white rounded'>
           Reset Game
         </button>
