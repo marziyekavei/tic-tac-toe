@@ -13,22 +13,6 @@ const Board: React.FC = () => {
   const [currentPlayer, setCurrentPlayer] = useState<"X" | "O">("X");
   const [winner, setWinner] = useState<Player | "draw">(null);
 
-
-  //select move bot
-  useEffect(() => {
-    if (currentPlayer === "O" && !winner) {
-      const movBot = getBestMove(board);
-      if (movBot !== -1) {
-        setTimeout(() => {
-          const newBoard = [...board]
-          newBoard[movBot] = "O";
-          setBoard(newBoard);
-          setCurrentPlayer("X");
-        }, 500);
-      }
-    }
-  }, [currentPlayer, winner, board])
-
   //handleClick for click on squares
   const handleClick = (index: number) => {
     if (board[index] || winner || currentPlayer === "O") return;
@@ -44,6 +28,28 @@ const Board: React.FC = () => {
     }
 
   }
+
+  //select move bot
+  useEffect(() => {
+    if (currentPlayer === "O" && !winner) {
+      const movBot = getBestMove(board);
+      if (movBot !== -1) {
+        setTimeout(() => {
+          const newBoard = [...board]
+          newBoard[movBot] = "O";
+          setBoard(newBoard);
+
+          const newWinner = checkWinner(newBoard);
+          if (newWinner) {
+            setWinner(newWinner);
+            return;
+          }
+          setCurrentPlayer("X");
+        }, 500);
+      }
+    }
+  }, [currentPlayer, winner, board])
+
 
   //method of checkingwinner
   const checkWinner = (board: Player[]): Player | "draw" | null => {
