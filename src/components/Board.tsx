@@ -14,19 +14,18 @@ const Board: React.FC = () => {
   const [winner, setWinner] = useState<Player | "draw">(null);
 
   //handleClick for click on squares
-  const handleClick = (index: number) => {
-    if (board[index] || winner || currentPlayer === "O") return;
+  const handleClick = (index: number, player: Player) => {
+    if (board[index] || winner) return;
     const newBoard = [...board];
-    newBoard[index] = "X";
+    newBoard[index] = player;
     setBoard(newBoard);
-    setCurrentPlayer("O")
 
     const newWinner = checkWinner(newBoard);
     if (newWinner) {
       setWinner(newWinner);
       return;
     }
-
+    setCurrentPlayer(player === "X" ? "O" : "X")
   }
 
   //select move bot
@@ -34,18 +33,7 @@ const Board: React.FC = () => {
     if (currentPlayer === "O" && !winner) {
       const movBot = getBestMove(board);
       if (movBot !== -1) {
-        setTimeout(() => {
-          const newBoard = [...board]
-          newBoard[movBot] = "O";
-          setBoard(newBoard);
-
-          const newWinner = checkWinner(newBoard);
-          if (newWinner) {
-            setWinner(newWinner);
-            return;
-          }
-          setCurrentPlayer("X");
-        }, 500);
+        setTimeout(() => { handleClick(movBot, "O") }, 500);
       }
     }
   }, [currentPlayer, winner, board])
@@ -95,7 +83,7 @@ const Board: React.FC = () => {
       <Status winner={winner} currentPlayer={currentPlayer} />
       <div className='grid grid-cols-[100px_100px_100px] gap-1 my-5 mx-auto'>
         {board.map((value, index) => (
-          <Square key={index} value={value} onClick={() => handleClick(index)} />
+          <Square key={index} value={value} onClick={() => handleClick(index, "X")} />
         ))}
       </div>
 
