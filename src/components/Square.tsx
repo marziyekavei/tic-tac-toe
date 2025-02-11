@@ -2,7 +2,7 @@ import React from 'react';
 
 //players type
 type SquareProps = {
-  value: "X" | "O" | "draw" | null;
+  value: "X" | "O" | null;
   onClick: () => void;
 }
 
